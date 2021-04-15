@@ -69,7 +69,7 @@ class Gui(QtWidgets.QWidget):
                 value = self.ui.tableWidget.item(row, column)
                 if value is not None:
                     row_list.append(value.text())
-                else: row_list.append(None)
+                else: row_list.append('')
             row_dict[column] = row_list
             row_list = []
         with open('filename.json', 'w') as filename:
@@ -78,7 +78,10 @@ class Gui(QtWidgets.QWidget):
     def upload(self):
         column_count = 0
         column_name = []
-        cell_data = []
+        column = 0
+        count = 0
+        item = None
+        # cell_data = []
         open_file = QtWidgets.QFileDialog.getOpenFileName(self, 'Open File')[0]
         with open(open_file) as file:
             data = json.load(file)
@@ -90,13 +93,13 @@ class Gui(QtWidgets.QWidget):
         for values in data.values():
             row_count = len(values)
             self.ui.tableWidget.setRowCount(row_count)
-            for item in values:
-                cell_data.append(item)
-            # тут надо создать цикл как внизу, определять конкретную ячейку через row и count
-            # и добавлять по одному элементу из массива cell_data
-            self.ui.tableWidget.setItem(row_count, column_count, cell_data)
-            # for column in range(column_count):
-            #     for row in range(row_count):
+            column = count
+            while column < column_count:
+                for rows in range(row_count):
+                    item = QtWidgets.QTableWidgetItem(values[rows])
+                    self.ui.tableWidget.setItem(rows, column, item)
+                column += 1
+            count += 1
 
 
 if __name__ == '__main__':
